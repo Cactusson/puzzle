@@ -17,7 +17,7 @@ def get_size(amount):
 
 
 class Puzzle:
-    def __init__(self, finished_callback, pic=None, amount=4):
+    def __init__(self, finished_callback, pic, amount=4):
         self.finished_callback = finished_callback
         self.pieces = self.make_pieces(pic, amount)
         self.spread_pieces()
@@ -30,8 +30,6 @@ class Puzzle:
     def make_pieces(self, pic, amount):
         width = 640
         height = 480
-        # pic = pg.Surface((width, height)).convert()
-        # pic.fill(pg.Color('blue'))
         rows, cols = get_size(amount)
         w = width // cols
         h = height // rows
@@ -117,6 +115,7 @@ class Puzzle:
         elif isinstance(self.grabbed, Section):
             if not self.check_section_on_sections(self.grabbed):
                 self.check_section_on_pieces(self.grabbed)
+        self.grabbed.unclick()
         self.grabbed = None
         if not self.finished:
             if self.check_finished():
@@ -173,6 +172,6 @@ class Puzzle:
         # if self.grabbed is not None:
         #     self.grabbed.draw(surface)
 
-    def update(self, mouse_pos):
+    def update(self, mouse_pos, dt):
         if self.grabbed:
             self.grabbed.adjust_pos(mouse_pos)

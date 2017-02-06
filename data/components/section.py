@@ -1,6 +1,7 @@
 class Section:
     def __init__(self, pieces):
         self.pieces = list(pieces)
+        self.grabbed = False
 
     def can_add(self, piece):
         return any((piece.is_joinable(s_piece) for s_piece in self.pieces))
@@ -47,9 +48,13 @@ class Section:
         return False
 
     def click(self, mouse_pos):
+        self.grabbed = True
         for piece in self.pieces:
             piece.mouse_offset[0] = piece.rect.center[0] - mouse_pos[0]
             piece.mouse_offset[1] = piece.rect.center[1] - mouse_pos[1]
+
+    def unclick(self):
+        self.grabbed = False
 
     def adjust_pos(self, mouse_pos):
         for piece in self.pieces:

@@ -12,6 +12,7 @@ class Piece(pg.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect(center=center)
         self.mouse_offset = [0, 0]
+        self.grabbed = False
 
     def get_neighbors(self, pieces):
         self.neighbors = {}
@@ -47,8 +48,12 @@ class Piece(pg.sprite.Sprite):
         return self.rect.collidepoint(mouse_pos)
 
     def click(self, mouse_pos):
+        self.grabbed = True
         self.mouse_offset[0] = self.rect.center[0] - mouse_pos[0]
         self.mouse_offset[1] = self.rect.center[1] - mouse_pos[1]
+
+    def unclick(self):
+        self.grabbed = False
 
     def adjust_pos(self, mouse_pos):
         self.rect.centerx = mouse_pos[0] + self.mouse_offset[0]

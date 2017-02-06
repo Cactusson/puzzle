@@ -1,5 +1,6 @@
 import pygame as pg
 
+from .. import prepare
 from .button import Button
 
 
@@ -7,8 +8,8 @@ class ButtonGroup:
     def __init__(self, rect, names, callback):
         self.rect = rect
         self.callback = callback
-        self.font_name = 'OpenSans-Bold'
-        self.font_size = 20
+        self.font_name = 'Quicksand-Bold'
+        self.font_size = 23
         self.buttons = self.make_buttons(names)
 
     def make_buttons(self, names):
@@ -37,11 +38,11 @@ class ButtonGroup:
         if width == 0:
             width = None
         else:
-            width *= 1.4
+            width *= 1.6
         if height == 0:
             height = None
         else:
-            height *= 1.2
+            height *= 1.3
         return width, height
 
     def click(self):
@@ -49,7 +50,6 @@ class ButtonGroup:
             button.click()
 
     def draw(self, surface):
-        surface.fill(pg.Color('lightgreen'), self.rect)
         for button in self.buttons:
             button.draw(surface)
 

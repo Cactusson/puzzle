@@ -1,7 +1,7 @@
 import pygame as pg
 
 from .. import prepare, tools
-from ..components.button import Button
+from ..components.button_group import ButtonGroup
 from ..components.choice_box import ChoiceBox
 from ..components.label import Label
 
@@ -10,25 +10,23 @@ class Choose(tools._State):
     def __init__(self):
         tools._State.__init__(self)
         self.title = Label(50, 'CHOOSE YOUR DESTINY',
-                           font_name='OpenSans-Bold',
-                           center=(prepare.SCREEN_RECT.centerx, 75))
+                           font_name='SourceCodePro-Bold',
+                           center=(prepare.SCREEN_RECT.centerx, 65))
 
     def start(self):
-        rect = pg.rect.Rect(300, 175, 400, 125)
-        self.difficulty_box = ChoiceBox(rect, 'DIFFICULTY:',
-                                        ['EASY', 'NORMAL', 'HARD'])
-        rect = pg.rect.Rect(350, 325, 300, 125)
-        self.hardcore_box = ChoiceBox(rect, 'HARDCORE:', ['ON', 'OFF'],
+        rect1 = pg.rect.Rect(300, 165, 400, 100)
+        self.difficulty_box = ChoiceBox(
+            rect1, 'DIFFICULTY:', ['EASY', 'NORMAL', 'HARD'], default='NORMAL')
+        rect2 = pg.rect.Rect(350, 290, 300, 100)
+        self.hardcore_box = ChoiceBox(rect2, 'HARDCORE:', ['ON', 'OFF'],
                                       default='OFF')
-        self.buttons = self.create_buttons()
+        rect = pg.rect.Rect(0, 0, 300, 100)
+        rect.center = (prepare.SCREEN_RECT.centerx, 525)
+        self.button_group = ButtonGroup(rect, ('PLAY', 'BACK'),
+                                        self.button_call)
 
-    def create_buttons(self):
-        play = Button(20, 'PLAY', self.button_call, font_name='OpenSans-Bold',
-                      center=(prepare.SCREEN_RECT.centerx, 500))
-        back = Button(20, 'BACK', self.button_call, font_name='OpenSans-Bold',
-                      center=(prepare.SCREEN_RECT.centerx, 550))
-        buttons = pg.sprite.Group(play, back)
-        return buttons
+        self.toggle_block = (250, 135, 500, 285)
+        self.buttons_block = rect.inflate(25, 25)
 
     def button_call(self, button_name):
         if button_name == 'PLAY':
@@ -60,7 +58,9 @@ class Choose(tools._State):
 
     def startup(self, persistant):
         self.persist = persistant
-        self.start()
+        if self.previous == 'MENU':
+            self.start()
+            prepare.make_transition(self, 'CHOOSE')
 
     def cleanup(self):
         self.done = False
@@ -74,21 +74,20 @@ class Choose(tools._State):
             if event.button == 1:
                 self.difficulty_box.click(event.pos)
                 self.hardcore_box.click(event.pos)
-                for button in self.buttons:
-                    button.click()
+                self.button_group.click()
 
     def draw(self, surface):
-        surface.fill(pg.Color('lightblue'))
+        surface.fill(prepare.BG_COLOR)
+        surface.fill(prepare.BLOCK_COLOR, self.toggle_block)
+        surface.fill(prepare.BLOCK_COLOR, self.buttons_block)
         self.title.draw(surface)
         self.difficulty_box.draw(surface)
         self.hardcore_box.draw(surface)
-        for button in self.buttons:
-            button.draw(surface)
+        self.button_group.draw(surface)
 
     def update(self, surface, dt):
         mouse_pos = pg.mouse.get_pos()
         self.difficulty_box.update(mouse_pos)
         self.hardcore_box.update(mouse_pos)
-        for button in self.buttons:
-            button.update(mouse_pos)
+        self.button_group.update(mouse_pos)
         self.draw(surface)

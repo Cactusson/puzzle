@@ -39,11 +39,14 @@ class Control(object):
         State is flipped if neccessary and State.update is called.
         """
         # you may want to pass self.keys to self.state.update
+        state_flipped = False
         if self.state.quit:
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, dt)
+            state_flipped = True
+        if not state_flipped:
+            self.state.update(self.screen, dt)
 
     def flip_state(self):
         """

@@ -1,5 +1,3 @@
-import pygame as pg
-
 from .label import Label
 from .toggle_button import ToggleButton
 
@@ -13,7 +11,7 @@ class ChoiceBox:
     def __init__(self, rect, title, options, default=None):
         self.rect = rect
         self.title = Label(22, title, center=(self.rect.centerx, 0),
-                           font_name='OpenSans-Bold')
+                           font_name='Quicksand-Bold')
         self.title.rect.top = self.rect.top
         self.toggles = self.create_toggles(options, default)
 
@@ -29,7 +27,7 @@ class ChoiceBox:
         width = sum([t.rect.width for t in toggles])
         gap = (self.rect.width - width) // (len(toggles) - 1)
         pos = [self.rect.left,
-               self.rect.bottom - toggles[0].rect.height]
+               self.rect.bottom]
         for toggle in toggles:
             if toggle.name == default:
                 toggle.activate()
@@ -76,4 +74,5 @@ class ChoiceBox:
             toggle.draw(surface)
 
     def update(self, mouse_pos):
-        pass
+        for toggle in self.toggles:
+            toggle.update(mouse_pos)

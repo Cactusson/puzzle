@@ -15,19 +15,24 @@ class Load(tools._State):
     def __init__(self):
         tools._State.__init__(self)
         self.pics_cache = {}
-        self.label = Label(30, 'LOADING', font_name='OpenSans-Bold',
+        self.label = Label(50, 'LOADING', font_name='SourceCodePro-Bold',
                            center=(prepare.SCREEN_RECT.center))
 
     def start(self):
-        self.image_drawn = False
-        self.image_on_screen = False
-        self.loaded = False
+        self.load_stuff()
+        self.next = 'GAME'
+        self.done = True
 
     def load_stuff(self):
         pic_num, pic = self.load_picture()
         self.persist['pic_num'] = pic_num
         self.persist['pic'] = pic
-        self.loaded = True
+        if self.hardcore:
+            while True:
+                pic_num2, pic2 = self.load_picture()
+                if pic_num != pic_num2:
+                    break
+            self.persist['pic2'] = pic2
 
     def load_picture(self):
         pic_num = random.randint(0, prepare.PICS_AMOUNT - 1)
@@ -47,7 +52,11 @@ class Load(tools._State):
 
     def startup(self, persistant):
         self.persist = persistant
-        self.start()
+        self.hardcore = self.persist['hardcore']
+        if self.previous == 'CHOOSE':
+            prepare.make_transition(self, 'LOAD')
+        elif self.previous == 'TRANSITION':
+            self.start()
 
     def cleanup(self):
         self.done = False
@@ -59,17 +68,8 @@ class Load(tools._State):
                 self.quit = True
 
     def draw(self, surface):
-        surface.fill(pg.Color('lightblue'))
+        surface.fill(prepare.BG_COLOR)
         self.label.draw(surface)
 
     def update(self, surface, dt):
-        if self.loaded:
-            self.next = 'GAME'
-            self.done = True
-        elif self.image_on_screen:
-            self.load_stuff()
-        elif self.image_drawn:
-            self.image_on_screen = True
-        else:
-            self.draw(surface)
-            self.image_drawn = True
+        pass

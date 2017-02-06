@@ -33,8 +33,8 @@ class Button(pg.sprite.Sprite):
         Button changes its image depending if the player is hovering it or not.
         """
         idle_color = pg.Color('black')
-        hover_color = pg.Color('white')
-        hover_fill = pg.Color('purple')
+        hover_color = prepare.BUTTON_HOVER_TEXT_COLOR
+        hover_fill = prepare.BUTTON_HOVER_FILL_COLOR
 
         if width and height:
             idle_image = prepare.transparent_surface(width, height)

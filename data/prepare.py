@@ -16,6 +16,14 @@ SCREEN_RECT = SCREEN.get_rect()
 
 PICS_AMOUNT = 10
 DIFFICULTY_SIZE = (9, 16, 25)
+TURN_TIME = [(3000, 6000), (4000, 8000), (5000, 10000)]
+TRANSITION_TIME = 800
+
+BG_COLOR = pg.Color('#E7EAA8')
+BG_GAME_COLOR = pg.Color('#CEDCC3')
+BLOCK_COLOR = pg.Color('#B4BB72')
+BUTTON_HOVER_FILL_COLOR = pg.Color('#303E27')
+BUTTON_HOVER_TEXT_COLOR = pg.Color('#F6FAF7')
 
 
 def graphics_from_directories(directories):
@@ -48,7 +56,18 @@ FONTS = tools.load_all_fonts(fonts_path)
 # MUSIC = tools.load_all_music(music_path)
 
 
-def transparent_surface(width, height):
+def transparent_surface(width, height, alpha=0):
     surface = pg.Surface((width, height)).convert()
-    surface.set_alpha(0)
+    surface.set_alpha(alpha)
     return surface.convert_alpha()
+
+
+def make_transition(state, name, alpha_transition=False):
+    image = pg.Surface(SCREEN_RECT.size).convert()
+    state.draw(image)
+    state.persist['next_state'] = name
+    state.persist['next_image'] = image
+    if alpha_transition:
+        state.persist['alpha_transition'] = True
+    state.next = 'TRANSITION'
+    state.done = True
