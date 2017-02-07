@@ -44,10 +44,7 @@ class PuzzleHardcore(Puzzle):
         return pieces
 
     def click(self, mouse_pos):
-        previous_grabbed = self.grabbed
         Puzzle.click(self, mouse_pos)
-        if previous_grabbed != self.grabbed:
-            self.grabbed.prepare_turn()
 
     def join_pieces(self, piece1, piece2):
         Puzzle.join_pieces(self, piece1, piece2)
@@ -59,6 +56,5 @@ class PuzzleHardcore(Puzzle):
 
     def update(self, mouse_pos, dt):
         for obj in self.objs:
-            if not obj.grabbed:
-                obj.update(dt)
+            obj.update(dt)
         Puzzle.update(self, mouse_pos, dt)

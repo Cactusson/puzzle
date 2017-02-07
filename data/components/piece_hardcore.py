@@ -14,6 +14,14 @@ class PieceHardcore(Piece, HardcoreObj):
     def get_num_of_image(self):
         return 1 if self.show_image == self.image else 2
 
+    def click(self, mouse_pos):
+        Piece.click(self, mouse_pos)
+        HardcoreObj.click(self)
+
+    def unclick(self):
+        Piece.unclick(self)
+        HardcoreObj.unclick(self)
+
     def draw(self, surface):
         surface.blit(self.show_image, self.rect)
 

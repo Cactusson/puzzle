@@ -21,5 +21,13 @@ class SectionHardcore(Section, HardcoreObj):
         section.auto_turn(self.pieces[0].get_num_of_image())
         Section.add_section(self, section)
 
+    def click(self, mouse_pos):
+        Section.click(self, mouse_pos)
+        HardcoreObj.click(self)
+
+    def unclick(self):
+        Section.unclick(self)
+        HardcoreObj.unclick(self)
+
     def update(self, dt):
         HardcoreObj.update(self, dt)
