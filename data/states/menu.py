@@ -34,7 +34,7 @@ class Menu(tools._State):
 
     def startup(self, persistant):
         self.persist = persistant
-        if self.previous == 'CHOOSE':
+        if self.previous in ['CHOOSE', 'HIGH_SCORE']:
             prepare.make_transition(self, 'MENU')
         elif self.previous == 'PAUSE':
             prepare.make_transition(self, 'MENU', True)

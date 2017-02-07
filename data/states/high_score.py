@@ -112,6 +112,8 @@ class HighScore(tools._State):
     def startup(self, persistant):
         self.persist = persistant
         self.start()
+        if self.previous == 'MENU':
+            prepare.make_transition(self, 'HIGH_SCORE')
 
     def cleanup(self):
         self.done = False
