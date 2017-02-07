@@ -55,6 +55,8 @@ class Pause(tools._State):
         self.buttons_active = True
 
     def back_to_game(self):
+        if 'restart' in self.persist:
+            self.persist['restart'] = 'DONE'
         self.next = 'GAME'
         self.done = True
 
@@ -62,16 +64,23 @@ class Pause(tools._State):
         if button_name == 'RESUME':
             self.finish()
         elif button_name == 'RESTART':
-            pass
+            self.persist['restart'] = 'INIT'
+            self.next = 'GAME'
+            self.done = True
         elif button_name == 'QUIT':
             self.next = 'MENU'
             self.done = True
 
     def startup(self, persistant):
         self.persist = persistant
-        self.screen = self.persist['screen']
-        del self.persist['screen']
-        self.start()
+        if 'restart_screen' in self.persist:
+            self.screen = self.persist['restart_screen']
+            del self.persist['restart_screen']
+            self.finish()
+        else:
+            self.screen = self.persist['screen']
+            del self.persist['screen']
+            self.start()
 
     def cleanup(self):
         self.done = False

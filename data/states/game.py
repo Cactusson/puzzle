@@ -13,8 +13,13 @@ class Game(tools._State):
         tools._State.__init__(self)
 
     def start(self, pic, pic_num=None, pic2=None):
+        self.pic = pic
+        self.pic_num = pic_num
+        self.pic2 = pic2
+        self.create_round()
+
+    def create_round(self):
         if not self.hardcore:
-            self.pic_num = pic_num
             try:
                 results_file = open('results', 'rb')
                 self.results = pickle.load(results_file)
@@ -28,12 +33,12 @@ class Game(tools._State):
             self.current_result = \
                 self.results[self.pic_num][self.difficulty]
             best_time = tools.time_to_text(self.current_result)
-            self.puzzle = Puzzle(self.puzzle_finished, pic,
+            self.puzzle = Puzzle(self.puzzle_finished, self.pic,
                                  prepare.DIFFICULTY_SIZE[self.difficulty])
         else:
             best_time = None
             self.puzzle = PuzzleHardcore(
-                self.puzzle_finished, pic, pic2,
+                self.puzzle_finished, self.pic, self.pic2,
                 prepare.TURN_TIME[self.difficulty],
                 prepare.DIFFICULTY_SIZE[self.difficulty])
 
@@ -69,6 +74,17 @@ class Game(tools._State):
             else:
                 self.start(pic, pic_num=pic_num)
             prepare.make_transition(self, 'GAME', True)
+        elif self.previous == 'PAUSE':
+            if 'restart' in self.persist:
+                if self.persist['restart'] == 'INIT':
+                    self.create_round()
+                    image = pg.Surface(prepare.SCREEN_RECT.size).convert()
+                    self.draw(image)
+                    self.persist['restart_screen'] = image
+                    self.next = 'PAUSE'
+                    self.done = True
+                elif self.persist['restart'] == 'DONE':
+                    del self.persist['restart']
 
     def cleanup(self):
         self.done = False
