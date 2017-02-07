@@ -175,3 +175,13 @@ def load_all_fonts(directory, accept=(".ttf", '.otf')):
     """Create a dictionary of paths to font files in given directory
     if their extensions are in accept."""
     return load_all_music(directory, accept)
+
+
+def time_to_text(time):
+    minutes = str(time // 60)
+    if len(minutes) == 1:
+        minutes = '0' + minutes
+    seconds = str(time % 60)
+    if len(seconds) == 1:
+        seconds = '0' + seconds
+    return '{}:{}'.format(minutes, seconds)

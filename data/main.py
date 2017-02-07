@@ -7,17 +7,25 @@ and in the prepare module.
 """
 
 from . import prepare, tools
-from .states import choose, game, load, menu, pause, transition
+from .states.choose import Choose
+from .states.game import Game
+from .states.high_score import HighScore
+from .states.load import Load
+from .states.menu import Menu
+from .states.pause import Pause
+from .states.transition import Transition
 
 
 def main():
     run_it = tools.Control(prepare.ORIGINAL_CAPTION)
-    state_dict = {'CHOOSE': choose.Choose(),
-                  'GAME': game.Game(),
-                  'LOAD': load.Load(),
-                  'MENU': menu.Menu(),
-                  'PAUSE': pause.Pause(),
-                  'TRANSITION': transition.Transition(),
+    state_dict = {
+        'CHOOSE': Choose(),
+        'GAME': Game(),
+        'HIGH_SCORE': HighScore(),
+        'LOAD': Load(),
+        'MENU': Menu(),
+        'PAUSE': Pause(),
+        'TRANSITION': Transition(),
                   }
     run_it.setup_states(state_dict, 'MENU')
     run_it.main()

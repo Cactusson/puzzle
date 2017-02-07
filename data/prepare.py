@@ -43,7 +43,7 @@ def graphics_from_directories(directories):
         GFX[directory] = tools.load_all_gfx(path)
     return GFX
 
-_SUB_DIRECTORIES = ['gui', 'pictures']
+_SUB_DIRECTORIES = ['gui', 'mini', 'pictures']
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
 fonts_path = os.path.join('resources', 'fonts')

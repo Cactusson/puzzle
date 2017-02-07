@@ -12,8 +12,6 @@ class Choose(tools._State):
         self.title = Label(50, 'CHOOSE YOUR DESTINY',
                            font_name='SourceCodePro-Bold',
                            center=(prepare.SCREEN_RECT.centerx, 65))
-
-    def start(self):
         rect1 = pg.rect.Rect(300, 165, 400, 100)
         self.difficulty_box = ChoiceBox(
             rect1, 'DIFFICULTY:', ['EASY', 'NORMAL', 'HARD'], default='NORMAL')
@@ -32,7 +30,7 @@ class Choose(tools._State):
         if button_name == 'PLAY':
             self.start_game()
         elif button_name == 'BACK':
-            self.back_to_menu()
+            self.change_state('MENU')
 
     def start_game(self):
         """
@@ -49,17 +47,16 @@ class Choose(tools._State):
         self.persist['difficulty'] = ['EASY', 'NORMAL', 'HARD'].index(
             difficulty)
         self.persist['hardcore'] = ['OFF', 'ON'].index(hardcore)
-        self.done = True
-        self.next = 'LOAD'
+        self.change_state('LOAD')
 
-    def back_to_menu(self):
+    def change_state(self, new_state):
+        self.button_group.unhover()
+        self.next = new_state
         self.done = True
-        self.next = 'MENU'
 
     def startup(self, persistant):
         self.persist = persistant
         if self.previous == 'MENU':
-            self.start()
             prepare.make_transition(self, 'CHOOSE')
 
     def cleanup(self):

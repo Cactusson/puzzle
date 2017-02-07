@@ -1,6 +1,5 @@
 import pygame as pg
 
-from .. import prepare
 from .button import Button
 
 
@@ -15,7 +14,10 @@ class ButtonGroup:
     def make_buttons(self, names):
         buttons = pg.sprite.Group()
         width, height = self.get_button_size(names)
-        gap = (self.rect.height - len(names) * height) // (len(names) - 1)
+        if len(names) == 1:
+            gap = 0
+        else:
+            gap = (self.rect.height - len(names) * height) // (len(names) - 1)
         for indx, name in enumerate(names):
             center = (self.rect.centerx,
                       self.rect.top + (height + gap) * indx + height // 2)
@@ -48,6 +50,10 @@ class ButtonGroup:
     def click(self):
         for button in self.buttons:
             button.click()
+
+    def unhover(self):
+        for button in self.buttons:
+            button.unhover()
 
     def draw(self, surface):
         for button in self.buttons:

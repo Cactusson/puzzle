@@ -8,8 +8,6 @@ from ..components.label import Label
 class Menu(tools._State):
     def __init__(self):
         tools._State.__init__(self)
-
-    def start(self):
         self.title = Label(60, 'PUZZLE', font_name='KaushanScript-Regular',
                            center=(prepare.SCREEN_RECT.centerx, 85))
         rect = pg.rect.Rect(0, 0, 400, 220)
@@ -23,19 +21,19 @@ class Menu(tools._State):
 
     def button_call(self, button_name):
         if button_name == 'PLAY':
-            self.go_to_choose()
+            self.change_state('CHOOSE')
         elif button_name == 'HIGH SCORE':
-            pass
+            self.change_state('HIGH_SCORE')
         elif button_name == 'QUIT':
             self.quit = True
 
-    def go_to_choose(self):
-        self.next = 'CHOOSE'
+    def change_state(self, new_state):
+        self.button_group.unhover()
+        self.next = new_state
         self.done = True
 
     def startup(self, persistant):
         self.persist = persistant
-        self.start()
         if self.previous == 'CHOOSE':
             prepare.make_transition(self, 'MENU')
         elif self.previous == 'PAUSE':

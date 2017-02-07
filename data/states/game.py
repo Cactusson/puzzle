@@ -8,16 +8,6 @@ from ..components.puzzle_hardcore import PuzzleHardcore
 from ..components.timer import Timer
 
 
-def time_to_text(time):
-    minutes = str(time // 60)
-    if len(minutes) == 1:
-        minutes = '0' + minutes
-    seconds = str(time % 60)
-    if len(seconds) == 1:
-        seconds = '0' + seconds
-    return '{}:{}'.format(minutes, seconds)
-
-
 class Game(tools._State):
     def __init__(self):
         tools._State.__init__(self)
@@ -37,7 +27,7 @@ class Game(tools._State):
 
             self.current_result = \
                 self.results[self.pic_num][self.difficulty]
-            best_time = time_to_text(self.current_result)
+            best_time = tools.time_to_text(self.current_result)
             self.puzzle = Puzzle(self.puzzle_finished, pic,
                                  prepare.DIFFICULTY_SIZE[self.difficulty])
         else:

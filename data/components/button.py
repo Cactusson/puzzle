@@ -58,6 +58,10 @@ class Button(pg.sprite.Sprite):
             else:
                 self.call()
 
+    def unhover(self):
+        self.hover = False
+        self.image = self.idle_image
+
     def update(self, mouse_pos):
         """
         Check if the button is hovered.
