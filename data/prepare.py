@@ -33,8 +33,6 @@ def graphics_from_directories(directories):
     base_path = os.path.join("resources", "graphics")
     GFX = {}
     for directory in directories:
-        if directory == 'pictures':
-            continue
         if getattr(sys, 'frozen', False):
             path = os.path.join(os.path.dirname(sys.executable), 'graphics',
                                 directory)
@@ -43,7 +41,7 @@ def graphics_from_directories(directories):
         GFX[directory] = tools.load_all_gfx(path)
     return GFX
 
-_SUB_DIRECTORIES = ['gui', 'mini', 'pictures']
+_SUB_DIRECTORIES = ['gui', 'mini']
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
 fonts_path = os.path.join('resources', 'fonts')

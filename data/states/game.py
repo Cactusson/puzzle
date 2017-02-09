@@ -1,7 +1,9 @@
 import pickle
 import pygame as pg
+import random
 
 from .. import prepare, tools
+from ..components.darkness import Darkness
 from ..components.gui import GUI
 from ..components.puzzle import Puzzle
 from ..components.puzzle_hardcore import PuzzleHardcore
@@ -12,10 +14,15 @@ class Game(tools._State):
     def __init__(self):
         tools._State.__init__(self)
 
-    def start(self, pic, pic_num=None, pic2=None):
-        self.pic = pic
-        self.pic_num = pic_num
-        self.pic2 = pic2
+    def start(self):
+        self.pic_num = random.randint(0, prepare.PICS_AMOUNT - 1)
+        self.pic = prepare.GFX['pictures']['pic0{}'.format(self.pic_num)]
+        if self.hardcore:
+            pic_num2 = random.choice([num for num in range(prepare.PICS_AMOUNT)
+                                      if num != self.pic_num])
+            self.pic2 = prepare.GFX['pictures']['pic0{}'.format(pic_num2)]
+        else:
+            self.pic2 = None
         self.create_round()
 
     def create_round(self):
@@ -45,6 +52,10 @@ class Game(tools._State):
         self.timer = Timer((816, 0))
         self.timer.start()
         self.gui = GUI(best_time, self.difficulty, self.hardcore)
+        if self.hardcore:
+            self.dark_cover = Darkness()
+        else:
+            self.dark_cover = None
 
     def puzzle_finished(self):
         self.timer.stop()
@@ -58,21 +69,12 @@ class Game(tools._State):
 
     def startup(self, persistant):
         self.persist = persistant
-        if self.previous == 'LOAD':
-            pic_num = self.persist['pic_num']
-            del self.persist['pic_num']
-            pic = self.persist['pic']
-            del self.persist['pic']
+        if self.previous == 'CHOOSE':
             self.difficulty = self.persist['difficulty']
             del self.persist['difficulty']
             self.hardcore = self.persist['hardcore']
             del self.persist['hardcore']
-            if self.hardcore:
-                pic2 = self.persist['pic2']
-                del self.persist['pic2']
-                self.start(pic, pic2=pic2)
-            else:
-                self.start(pic, pic_num=pic_num)
+            self.start()
             prepare.make_transition(self, 'GAME', True)
         elif self.previous == 'PAUSE':
             if 'restart' in self.persist:
@@ -108,9 +110,13 @@ class Game(tools._State):
         self.puzzle.draw(surface)
         self.timer.draw(surface)
         self.gui.draw(surface)
+        if self.dark_cover:
+            self.dark_cover.draw(surface)
 
     def update(self, surface, dt):
         self.timer.update(dt)
         mouse_pos = pg.mouse.get_pos()
         self.puzzle.update(mouse_pos, dt)
+        if self.dark_cover:
+            self.dark_cover.update(mouse_pos, dt)
         self.draw(surface)

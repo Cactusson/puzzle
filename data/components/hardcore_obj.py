@@ -39,7 +39,6 @@ class HardcoreObj:
     def prepare_turn(self):
         self.turn_task = Task(self.do_turn, random.randint(
             self.turn_time_min, self.turn_time_max))
-        self.tasks.add(self.turn_task)
 
     def auto_turn(self, num):
         if not hasattr(self, 'pieces'):
@@ -53,7 +52,7 @@ class HardcoreObj:
 
     def stop_turning(self):
         if self.turn_task:
-            self.turn_task.kill()
+            self.turn_task = None
 
     def start_moving(self):
         distance, direction = self.get_move_data()
@@ -109,7 +108,6 @@ class HardcoreObj:
     def prepare_to_move(self):
         self.move_task = Task(self.start_moving, random.randint(
             self.turn_time_min, self.turn_time_max))
-        self.tasks.add(self.move_task)
 
     def stop_moving(self):
         self.animations.empty()
@@ -123,7 +121,10 @@ class HardcoreObj:
         self.prepare_to_move()
 
     def update(self, dt):
-        self.tasks.update(dt * 1000)
+        if self.turn_task:
+            self.turn_task.update(dt * 1000)
+        if self.move_task:
+            self.move_task.update(dt * 1000)
         if not hasattr(self, 'pieces'):
             self.animations.update(dt * 1000)
         else:

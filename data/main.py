@@ -27,5 +27,5 @@ def main():
         'PAUSE': Pause(),
         'TRANSITION': Transition(),
                   }
-    run_it.setup_states(state_dict, 'MENU')
+    run_it.setup_states(state_dict, 'LOAD')
     run_it.main()

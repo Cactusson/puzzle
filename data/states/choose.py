@@ -35,7 +35,7 @@ class Choose(tools._State):
     def start_game(self):
         """
         Tries to get info from difficulty_box and hardcore_box.
-        On success proceed to LOAD state.
+        On success proceed to GAME state.
         On failure does nothing.
         """
         difficulty = self.difficulty_box.get_active()
@@ -47,7 +47,7 @@ class Choose(tools._State):
         self.persist['difficulty'] = ['EASY', 'NORMAL', 'HARD'].index(
             difficulty)
         self.persist['hardcore'] = ['OFF', 'ON'].index(hardcore)
-        self.change_state('LOAD')
+        self.change_state('GAME')
 
     def change_state(self, new_state):
         self.button_group.unhover()

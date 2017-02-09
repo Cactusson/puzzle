@@ -12,7 +12,7 @@ class PuzzleHardcore(Puzzle):
         self.pieces = self.make_pieces(pic, pic2, amount)
         self.spread_pieces()
         self.sections = []
-        # objs = pieces + sections, for drawing in the right order
+        # objs : pieces + sections, for drawing in the right order
         self.objs = self.pieces.copy()
         self.grabbed = None
         self.finished = False
@@ -56,5 +56,6 @@ class PuzzleHardcore(Puzzle):
 
     def update(self, mouse_pos, dt):
         for obj in self.objs:
-            obj.update(dt)
+            if obj is not self.grabbed:
+                obj.update(dt)
         Puzzle.update(self, mouse_pos, dt)
