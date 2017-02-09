@@ -41,7 +41,7 @@ def graphics_from_directories(directories):
         GFX[directory] = tools.load_all_gfx(path)
     return GFX
 
-_SUB_DIRECTORIES = ['gui', 'mini']
+_SUB_DIRECTORIES = ['gui']
 GFX = graphics_from_directories(_SUB_DIRECTORIES)
 
 fonts_path = os.path.join('resources', 'fonts')
@@ -60,12 +60,14 @@ def transparent_surface(width, height, alpha=0):
     return surface.convert_alpha()
 
 
-def make_transition(state, name, alpha_transition=False):
+def make_transition(state, name, alpha_transition=False, duration=None):
     image = pg.Surface(SCREEN_RECT.size).convert()
     state.draw(image)
     state.persist['next_state'] = name
     state.persist['next_image'] = image
     if alpha_transition:
         state.persist['alpha_transition'] = True
+    if duration:
+        state.persist['duration'] = duration
     state.next = 'TRANSITION'
     state.done = True

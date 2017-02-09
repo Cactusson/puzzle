@@ -37,12 +37,12 @@ class Transition(tools._State):
         animation.start(self.next_rect)
         self.animations.add(animation)
 
-    def start_alpha(self):
+    def start_alpha(self, duration):
         self.previous_rect = self.previous_image.get_rect()
         self.next_rect = self.next_image.get_rect()
         self.next_image.set_alpha(0)
-        previous_calc = Calc(255, 0, 1000, self.previous_image)
-        next_calc = Calc(0, 255, 1000, self.next_image)
+        previous_calc = Calc(255, 0, duration, self.previous_image)
+        next_calc = Calc(0, 255, duration, self.next_image)
         next_calc.callback = self.finish
         self.calcs = [previous_calc, next_calc]
 
@@ -59,7 +59,12 @@ class Transition(tools._State):
         del self.persist['next_image']
         if 'alpha_transition' in self.persist:
             del self.persist['alpha_transition']
-            self.start_alpha()
+            if 'duration' in self.persist:
+                duration = self.persist['duration']
+                del self.persist['duration']
+            else:
+                duration = 1000
+            self.start_alpha(duration)
         else:
             self.start()
 

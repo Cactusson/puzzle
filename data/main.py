@@ -13,6 +13,7 @@ from .states.high_score import HighScore
 from .states.load import Load
 from .states.menu import Menu
 from .states.pause import Pause
+from .states.show_pic import ShowPic
 from .states.transition import Transition
 
 
@@ -25,6 +26,7 @@ def main():
         'LOAD': Load(),
         'MENU': Menu(),
         'PAUSE': Pause(),
+        'SHOW_PIC': ShowPic(),
         'TRANSITION': Transition(),
                   }
     run_it.setup_states(state_dict, 'LOAD')
