@@ -8,7 +8,7 @@ from . import tools
 SCREEN_SIZE = (1000, 600)
 ORIGINAL_CAPTION = 'Puzzle'
 
-# pg.mixer.pre_init(44100, -16, 1, 512)
+pg.mixer.pre_init(44100, -16, 1, 512)
 pg.init()
 os.environ['SDL_VIDEO_CENTERED'] = 'TRUE'
 SCREEN = pg.display.set_mode(SCREEN_SIZE)
@@ -47,11 +47,13 @@ GFX = graphics_from_directories(_SUB_DIRECTORIES)
 fonts_path = os.path.join('resources', 'fonts')
 FONTS = tools.load_all_fonts(fonts_path)
 
-# sfx_path = os.path.join('resources', 'sounds')
-# SFX = tools.load_all_sfx(sfx_path)
+sfx_path = os.path.join('resources', 'sounds')
+SFX = tools.load_all_sfx(sfx_path)
 
-# music_path = os.path.join('resources', 'music')
-# MUSIC = tools.load_all_music(music_path)
+music_path = os.path.join('resources', 'music')
+MUSIC = tools.load_all_music(music_path)
+
+tools.music_station.create_playlist(MUSIC.values())
 
 
 def transparent_surface(width, height, alpha=0):

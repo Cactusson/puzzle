@@ -1,6 +1,7 @@
 import pygame as pg
 
 from .. import prepare
+from . import settings
 
 
 class Button(pg.sprite.Sprite):
@@ -53,7 +54,9 @@ class Button(pg.sprite.Sprite):
 
     def click(self):
         if self.hover:
-            if hasattr(self, 'name'):
+            if hasattr(self, 'name') and self.name is not None:
+                if settings.music_on:
+                    prepare.SFX['click'].play()
                 self.call(self.name)
             else:
                 self.call()

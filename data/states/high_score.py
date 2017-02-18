@@ -149,7 +149,7 @@ class HighScore(tools._State):
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                self.quit = True
+                self.change_state('MENU')
             elif event.key == pg.K_UP:
                 self.move_show_rect(-130)
             elif event.key == pg.K_DOWN:

@@ -51,7 +51,8 @@ class Game(tools._State):
 
         self.timer = Timer((816, 0))
         self.timer.start()
-        self.gui = GUI(best_time, self.difficulty, self.hardcore)
+        self.gui = GUI(best_time, self.difficulty, self.hardcore,
+                       self.finish_game)
         if self.hardcore:
             self.dark_cover = Darkness()
         else:
@@ -66,6 +67,11 @@ class Game(tools._State):
                     result_time
                 results_file = open('results', 'wb')
                 pickle.dump(self.results, results_file)
+        self.gui.show_finish_button()
+
+    def finish_game(self):
+        self.next = 'MENU'
+        self.done = True
 
     def startup(self, persistant):
         self.persist = persistant
@@ -95,13 +101,12 @@ class Game(tools._State):
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                self.quit = True
-            elif event.key == pg.K_q:
                 self.persist['screen'] = pg.display.get_surface().copy()
                 self.next = 'PAUSE'
                 self.done = True
         elif event.type == pg.MOUSEBUTTONDOWN:
             self.puzzle.click(event.pos)
+            self.gui.click()
         elif event.type == pg.MOUSEBUTTONUP:
             self.puzzle.unclick()
 
@@ -117,6 +122,7 @@ class Game(tools._State):
         self.timer.update(dt)
         mouse_pos = pg.mouse.get_pos()
         self.puzzle.update(mouse_pos, dt)
+        self.gui.update(mouse_pos, dt)
         if self.dark_cover:
             self.dark_cover.update(mouse_pos, dt)
         self.draw(surface)

@@ -89,8 +89,6 @@ class Pause(tools._State):
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                self.quit = True
-            elif event.key == pg.K_q:
                 if self.buttons_active:
                     self.finish()
         elif event.type == pg.MOUSEBUTTONDOWN:

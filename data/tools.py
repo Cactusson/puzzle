@@ -6,6 +6,12 @@ for States.  Also contained here are resource loading functions.
 import os
 import pygame as pg
 
+from .components.music_station import MusicStation
+
+SCREEN_SIZE = (1000, 600)
+
+music_station = MusicStation()
+
 
 class Control(object):
     """
@@ -22,6 +28,7 @@ class Control(object):
         self.state_dict = {}
         self.state_name = None
         self.state = None
+        self.fullscreen = False
 
     def setup_states(self, state_dict, start_state):
         """
@@ -47,6 +54,7 @@ class Control(object):
             state_flipped = True
         if not state_flipped:
             self.state.update(self.screen, dt)
+        music_station.update()
 
     def flip_state(self):
         """
@@ -59,6 +67,16 @@ class Control(object):
         self.state.previous = previous
         self.state.startup(persist)
 
+    def toggle_fullscreen(self):
+        self.fullscreen = not self.fullscreen
+        if self.fullscreen:
+            pg.display.set_mode(SCREEN_SIZE, pg.FULLSCREEN)
+        else:
+            pg.display.set_mode(SCREEN_SIZE)
+
+    def toggle_music(self):
+        music_station.toggle_music()
+
     def event_loop(self):
         """
         Process all events and pass them down to current State.  The f5 key
@@ -67,6 +85,14 @@ class Control(object):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_F4:
+                    if pg.key.get_pressed()[pg.K_LALT]:
+                        self.done = True
+                elif event.key == pg.K_f:
+                    self.toggle_fullscreen()
+                elif event.key == pg.K_m:
+                    self.toggle_music()
             self.state.get_event(event)
 
     def main(self):

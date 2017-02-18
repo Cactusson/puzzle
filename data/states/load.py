@@ -42,9 +42,7 @@ class Load(tools._State):
         return self.persist
 
     def get_event(self, event):
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_ESCAPE:
-                self.quit = True
+        pass
 
     def draw(self, surface):
         surface.fill(prepare.BG_COLOR)

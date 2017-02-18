@@ -36,7 +36,7 @@ class Menu(tools._State):
         self.persist = persistant
         if self.previous in ['CHOOSE', 'HIGH_SCORE']:
             prepare.make_transition(self, 'MENU')
-        elif self.previous == 'PAUSE':
+        elif self.previous == 'PAUSE' or self.previous == 'GAME':
             prepare.make_transition(self, 'MENU', True)
 
     def cleanup(self):
