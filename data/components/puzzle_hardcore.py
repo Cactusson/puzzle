@@ -6,9 +6,9 @@ from .section_hardcore import SectionHardcore
 
 
 class PuzzleHardcore(Puzzle):
-    def __init__(self, finished_callback, pic, pic2, turn_time, amount=4):
+    def __init__(self, finished_callback, pic, pic2, flip_time, amount):
         self.finished_callback = finished_callback
-        self.turn_time = turn_time
+        self.flip_time = flip_time
         self.pieces = self.make_pieces(pic, pic2, amount)
         self.spread_pieces()
         self.sections = []
@@ -36,22 +36,21 @@ class PuzzleHardcore(Puzzle):
                 centery = step_y * j + step_y // 2
                 center = (centerx, centery)
                 piece = PieceHardcore((i, j), image, image2, center,
-                                      self.turn_time)
+                                      self.flip_time)
                 pieces.append(piece)
 
         for piece in pieces:
             piece.get_neighbors(pieces)
         return pieces
 
-    def click(self, mouse_pos):
-        Puzzle.click(self, mouse_pos)
-
     def join_pieces(self, piece1, piece2):
         Puzzle.join_pieces(self, piece1, piece2)
         piece1.stop_turning()
+        piece1.stop_moving()
         piece2.stop_turning()
+        piece2.stop_moving()
         piece2.auto_turn(piece1.get_num_of_image())
-        section = SectionHardcore((piece1, piece2), self.turn_time)
+        section = SectionHardcore((piece1, piece2), self.flip_time)
         return section
 
     def update(self, mouse_pos, dt):

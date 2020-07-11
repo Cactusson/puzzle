@@ -5,9 +5,6 @@ from ..components.button_pic import ButtonPic
 
 
 class ShowPic(tools._State):
-    def __init__(self):
-        tools._State.__init__(self)
-
     def start(self):
         self.pic_pos = (
             (prepare.SCREEN_RECT.width - self.pic.get_width()) // 2,
@@ -36,10 +33,8 @@ class ShowPic(tools._State):
     def startup(self, persistant):
         self.persist = persistant
         if self.previous == 'HIGH_SCORE':
-            self.screen = self.persist['screen']
-            self.pic = self.persist['pic']
-            del self.persist['screen']
-            del self.persist['pic']
+            self.screen = self.persist.pop('screen')
+            self.pic = self.persist.pop('pic')
             self.start()
             prepare.make_transition(self, 'SHOW_PIC', True, 500)
 

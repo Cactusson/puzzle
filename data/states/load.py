@@ -3,6 +3,7 @@ import pygame as pg
 
 from .. import prepare, tools
 
+from ..components import colors
 from ..components.label import Label
 
 
@@ -45,7 +46,7 @@ class Load(tools._State):
         pass
 
     def draw(self, surface):
-        surface.fill(prepare.BG_COLOR)
+        surface.fill(colors.BG_COLOR)
         self.label.draw(surface)
 
     def update(self, surface, dt):

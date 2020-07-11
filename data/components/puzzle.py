@@ -2,6 +2,7 @@ import pygame as pg
 import random
 
 from .. import prepare
+
 from . import settings
 from .piece import Piece
 from .section import Section
@@ -19,7 +20,7 @@ def get_size(amount):
 
 
 class Puzzle:
-    def __init__(self, finished_callback, pic, amount=4):
+    def __init__(self, finished_callback, pic, amount):
         self.finished_callback = finished_callback
         self.pieces = self.make_pieces(pic, amount)
         self.spread_pieces()
@@ -67,7 +68,7 @@ class Puzzle:
             if current_piece.is_joinable(piece):
                 section = self.join_pieces(current_piece, piece)
                 self.change_order(current_piece, piece, new=section)
-                if settings.music_on:
+                if settings.sound_on:
                     prepare.SFX['connect'].play()
                 return True
         return False
@@ -79,7 +80,7 @@ class Puzzle:
             if section.can_add(current_piece):
                 section.add_piece(current_piece)
                 self.change_order(current_piece, jump=section)
-                if settings.music_on:
+                if settings.sound_on:
                     prepare.SFX['connect'].play()
                 return True
         return False
@@ -91,7 +92,7 @@ class Puzzle:
             if current_section.can_add(piece):
                 current_section.add_piece(piece)
                 self.change_order(piece, jump=current_section)
-                if settings.music_on:
+                if settings.sound_on:
                     prepare.SFX['connect'].play()
                 return True
         return False
@@ -103,7 +104,7 @@ class Puzzle:
             if current_section.can_add_section(section):
                 current_section.add_section(section)
                 self.change_order(section, jump=current_section)
-                if settings.music_on:
+                if settings.sound_on:
                     prepare.SFX['connect'].play()
                 return True
         return False

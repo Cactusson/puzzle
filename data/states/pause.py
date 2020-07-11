@@ -1,6 +1,8 @@
 import pygame as pg
 
 from .. import prepare, tools
+
+from ..components import colors
 from ..components.animation import Animation
 from ..components.button_group import ButtonGroup
 from ..components.calc import Calc
@@ -21,12 +23,12 @@ class Pause(tools._State):
         self.main_block.rect = pg.rect.Rect(0, 0, 400, 500)
         self.main_block.image = pg.Surface(self.main_block.rect.size)
         self.main_block.rect.center = prepare.SCREEN_RECT.center
-        self.title = Label(40, 'PAUSE', font_name='SourceCodePro-Bold',
+        self.title = Label(50, 'PAUSE', font_name='SourceCodePro-Bold',
                            center=(self.main_block.rect.width // 2, 75))
         rect = pg.rect.Rect(0, 0, 300, 250)
         rect.center = self.main_block.rect.width // 2, 300
-        self.button_group = ButtonGroup(rect, ('RESUME', 'RESTART', 'QUIT'),
-                                        self.button_call)
+        self.button_group = ButtonGroup(
+            rect, ('RESUME', 'RESTART', 'SETTINGS', 'QUIT'), self.button_call)
 
         animation = Animation(
             x=self.main_block.rect.x, y=self.main_block.rect.y,
@@ -67,20 +69,26 @@ class Pause(tools._State):
             self.persist['restart'] = 'INIT'
             self.next = 'GAME'
             self.done = True
+        elif button_name == 'SETTINGS':
+            self.next = 'SETTINGS'
+            self.done = True
         elif button_name == 'QUIT':
             self.next = 'MENU'
             self.done = True
 
     def startup(self, persistant):
         self.persist = persistant
-        if 'restart_screen' in self.persist:
-            self.screen = self.persist['restart_screen']
-            del self.persist['restart_screen']
-            self.finish()
-        else:
-            self.screen = self.persist['screen']
-            del self.persist['screen']
-            self.start()
+        if self.previous == 'GAME':
+            if 'restart_screen' in self.persist:
+                self.screen = self.persist['restart_screen']
+                del self.persist['restart_screen']
+                self.finish()
+            else:
+                self.screen = self.persist['screen']
+                del self.persist['screen']
+                self.start()
+        elif self.previous == 'SETTINGS':
+            pass
 
     def cleanup(self):
         self.done = False
@@ -100,7 +108,7 @@ class Pause(tools._State):
         surface.blit(self.screen, (0, 0))
         surface.blit(self.cover, (0, 0))
 
-        self.main_block.image.fill(prepare.BLOCK_COLOR)
+        self.main_block.image.fill(colors.BLOCK_COLOR)
         self.title.draw(self.main_block.image)
         self.button_group.draw(self.main_block.image)
         surface.blit(self.main_block.image, self.main_block.rect)

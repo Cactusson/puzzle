@@ -12,7 +12,8 @@ class Darkness(pg.sprite.Sprite):
         self.max_vision = (int(prepare.SCREEN_RECT.width * 2.5),
                            int(prepare.SCREEN_RECT.width * 2.5))
         self.change_rate = (20, 20)
-        self.state = 'INACTIVE'
+        # states = WAIT_TO_SHRINK, SHRINK, WAIT_TO_GROW, GROW, STOP
+        self.active = True
         self.start()
 
     def start(self):
@@ -34,11 +35,12 @@ class Darkness(pg.sprite.Sprite):
         return cover
 
     def prepare_to_shrink(self):
+        self.state = 'WAIT_TO_SHRINK'
         task = Task(self.start_shrinking, self.time_before_shrink)
         self.tasks.add(task)
 
     def start_shrinking(self):
-        self.state = 'ACTIVE'
+        self.state = 'SHRINK'
         self.tasks.empty()
         task = Task(self.shrink, 5, -1)
         self.tasks.add(task)
@@ -56,10 +58,12 @@ class Darkness(pg.sprite.Sprite):
         self.prepare_to_grow()
 
     def prepare_to_grow(self):
+        self.state = 'WAIT_TO_GROW'
         task = Task(self.start_growing, self.time_before_grow)
         self.tasks.add(task)
 
     def start_growing(self):
+        self.state = 'GROW'
         self.tasks.empty()
         task = Task(self.grow, 5, -1)
         self.tasks.add(task)
@@ -74,13 +78,29 @@ class Darkness(pg.sprite.Sprite):
 
     def stop_growing(self):
         self.tasks.empty()
-        self.start()
+        if self.active:
+            self.start()
+        else:
+            self.state = 'STOP'
+
+    def stop(self):
+        self.active = False
+        if self.state == 'WAIT_TO_SHRINK':
+            self.tasks.empty()
+            self.state = 'STOP'
+        elif self.state == 'SHRINK':
+            self.stop_shrinking()
+            self.change_rate = self.change_rate[0] * 2, self.change_rate[1] * 2
+            self.start_growing()
+        elif self.state == 'WAIT_TO_GROW':
+            self.change_rate = self.change_rate[0] * 2, self.change_rate[1] * 2
+            self.start_growing()
 
     def draw(self, surface):
-        if self.state == 'ACTIVE':
+        if self.state in ['SHRINK', 'GROW', 'WAIT_TO_GROW']:
             surface.blit(self.image, (0, 0))
 
     def update(self, center, dt):
         self.tasks.update(dt * 1000)
-        if self.state == 'ACTIVE':
+        if self.state in ['SHRINK', 'GROW', 'WAIT_TO_GROW']:
             self.image = self.make_image(center)

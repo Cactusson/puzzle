@@ -1,9 +1,12 @@
 import pygame as pg
 
 from .. import prepare, tools
+
+from ..components import colors
 from ..components.button_group import ButtonGroup
 from ..components.choice_box import ChoiceBox
 from ..components.label import Label
+from ..components.tooltip import Tooltip
 
 
 class Choose(tools._State):
@@ -12,12 +15,23 @@ class Choose(tools._State):
         self.title = Label(50, 'CHOOSE YOUR DESTINY',
                            font_name='SourceCodePro-Bold',
                            center=(prepare.SCREEN_RECT.centerx, 65))
-        rect1 = pg.rect.Rect(300, 165, 400, 100)
+
+    def start(self):
+        difficulty = ['EASY', 'NORMAL', 'HARD'][self.persist['difficulty']]
+        hardcore = ['OFF', 'ON'][self.persist['hardcore']]
+
+        rect = pg.rect.Rect(320, 165, 360, 100)
+        text = ('Easy: 3x3 picture.', 'Normal: 4x4 picture.',
+                'Hard: 5x5 picture.')
+        tooltip = Tooltip(pg.rect.Rect(765, 140, 220, 110), text)
         self.difficulty_box = ChoiceBox(
-            rect1, 'DIFFICULTY:', ['EASY', 'NORMAL', 'HARD'], default='NORMAL')
-        rect2 = pg.rect.Rect(350, 290, 300, 100)
-        self.hardcore_box = ChoiceBox(rect2, 'HARDCORE:', ['ON', 'OFF'],
-                                      default='OFF')
+            rect, 'DIFFICULTY:', ['EASY', 'NORMAL', 'HARD'], difficulty,
+            tooltip=tooltip)
+        rect = pg.rect.Rect(410, 290, 180, 100)
+        text = "In hardcore mode pieces constantly flip and move around. Also lights sometimes go out."
+        tooltip = Tooltip(pg.rect.Rect(765, 280, 220, 135), text)
+        self.hardcore_box = ChoiceBox(
+            rect, 'HARDCORE:', ['ON', 'OFF'], hardcore, tooltip=tooltip)
         rect = pg.rect.Rect(0, 0, 300, 100)
         rect.center = (prepare.SCREEN_RECT.centerx, 525)
         self.button_group = ButtonGroup(rect, ('PLAY', 'BACK'),
@@ -34,29 +48,35 @@ class Choose(tools._State):
 
     def start_game(self):
         """
-        Tries to get info from difficulty_box and hardcore_box.
-        On success proceed to GAME state.
-        On failure does nothing.
+        difficulty and hardcore choice boxes should always have an active
+        value but we check here anyway, just to be sure. Then proceed to GAME.
         """
         difficulty = self.difficulty_box.get_active()
-        if difficulty is None:
-            return
         hardcore = self.hardcore_box.get_active()
-        if hardcore is None:
+        if difficulty is None or hardcore is None:
             return
-        self.persist['difficulty'] = ['EASY', 'NORMAL', 'HARD'].index(
-            difficulty)
-        self.persist['hardcore'] = ['OFF', 'ON'].index(hardcore)
         self.change_state('GAME')
+
+    def click(self):
+        if self.difficulty_box.click(pg.mouse.get_pos()):
+            difficulty = self.difficulty_box.get_active()
+            self.persist['difficulty'] = ['EASY', 'NORMAL', 'HARD'].index(
+                difficulty)
+        if self.hardcore_box.click(pg.mouse.get_pos()):
+            hardcore = self.hardcore_box.get_active()
+            self.persist['hardcore'] = ['OFF', 'ON'].index(hardcore)
+        self.button_group.click()
 
     def change_state(self, new_state):
         self.button_group.unhover()
         self.next = new_state
         self.done = True
 
-    def startup(self, persistant):
-        self.persist = persistant
+    def startup(self, persist):
+        self.persist = persist
         if self.previous == 'MENU':
+            # be sure to start only once for every state, mb need to fix
+            self.start()
             prepare.make_transition(self, 'CHOOSE')
 
     def cleanup(self):
@@ -69,14 +89,12 @@ class Choose(tools._State):
                 self.change_state('MENU')
         elif event.type == pg.MOUSEBUTTONDOWN:
             if event.button == 1:
-                self.difficulty_box.click(event.pos)
-                self.hardcore_box.click(event.pos)
-                self.button_group.click()
+                self.click()
 
     def draw(self, surface):
-        surface.fill(prepare.BG_COLOR)
-        surface.fill(prepare.BLOCK_COLOR, self.toggle_block)
-        surface.fill(prepare.BLOCK_COLOR, self.buttons_block)
+        surface.fill(colors.BG_COLOR)
+        surface.fill(colors.BLOCK_COLOR, self.toggle_block)
+        surface.fill(colors.BLOCK_COLOR, self.buttons_block)
         self.title.draw(surface)
         self.difficulty_box.draw(surface)
         self.hardcore_box.draw(surface)

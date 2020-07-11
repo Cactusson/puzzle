@@ -16,14 +16,8 @@ SCREEN_RECT = SCREEN.get_rect()
 
 PICS_AMOUNT = 10
 DIFFICULTY_SIZE = (9, 16, 25)
-TURN_TIME = [(3000, 6000), (4000, 8000), (5000, 10000)]
-TRANSITION_TIME = 800
-
-BG_COLOR = pg.Color('#E7EAA8')
-BG_GAME_COLOR = pg.Color('#CEDCC3')
-BLOCK_COLOR = pg.Color('#B4BB72')
-BUTTON_HOVER_FILL_COLOR = pg.Color('#303E27')
-BUTTON_HOVER_TEXT_COLOR = pg.Color('#F6FAF7')
+TURN_TIME = [(5000, 10000), (4000, 8000), (3000, 6000)]
+TRANSITION_TIME = 700
 
 
 def graphics_from_directories(directories):
@@ -40,6 +34,7 @@ def graphics_from_directories(directories):
             path = os.path.join(base_path, directory)
         GFX[directory] = tools.load_all_gfx(path)
     return GFX
+
 
 _SUB_DIRECTORIES = ['gui']
 GFX = graphics_from_directories(_SUB_DIRECTORIES)

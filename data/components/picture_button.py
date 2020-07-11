@@ -2,22 +2,24 @@ import pygame as pg
 
 from .. import prepare
 
+from . import colors
+
 
 class PictureButton(pg.sprite.Sprite):
     """
     Used in HIGH_SCORE state. It's a picture that works like a button.
     On click it calls provided callback function giving it the pic as an arg.
     """
-    def __init__(self, topleft, pic, callback):
+    def __init__(self, pic, callback):
         pg.sprite.Sprite.__init__(self)
         self.big_pic = pic
         self.callback = callback
-        mini_width = 150
-        mini_height = 76
+        mini_width = 100
+        mini_height = 75
         self.idle_image, self.hover_image = self.make_images(
             mini_width, mini_height)
         self.image = self.idle_image
-        self.rect = self.image.get_rect(topleft=topleft)
+        self.rect = self.image.get_rect()  # position specified on creation
         self.hovered = False
 
     def make_images(self, width, height):
@@ -27,7 +29,7 @@ class PictureButton(pg.sprite.Sprite):
             width + gap * 2, height + gap * 2)
         idle_image.blit(mini_pic, (gap, gap))
         hover_image = pg.Surface((width + gap * 2, height + gap * 2)).convert()
-        hover_image.fill(prepare.BUTTON_HOVER_TEXT_COLOR)
+        hover_image.fill(colors.BUTTON_HOVER_TEXT_COLOR)
         hover_image.blit(mini_pic, (gap, gap))
         return idle_image, hover_image
 

@@ -1,6 +1,6 @@
 import pygame as pg
 
-from .. import prepare
+from . import colors
 
 
 class Slider(pg.sprite.Sprite):
@@ -15,7 +15,7 @@ class Slider(pg.sprite.Sprite):
 
     def make_image(self):
         image = pg.Surface(self.rect.size).convert()
-        image.fill(prepare.BUTTON_HOVER_FILL_COLOR)
+        image.fill(colors.BUTTON_HOVER_FILL_COLOR)
         return image
 
     def get_top(self):
@@ -40,6 +40,7 @@ class Slider(pg.sprite.Sprite):
         self.adjust_pos()
 
     def adjust_pos(self):
+        # useless?
         if self.rect.top < self.top:
             self.rect.top = self.top
         if self.rect.bottom > self.bottom:

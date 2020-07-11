@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-def close_enough(value, target, tolerance=7):
+def close_enough(value, target, tolerance=9):
     return target - tolerance <= value <= target + tolerance
 
 

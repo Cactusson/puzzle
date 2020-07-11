@@ -1,6 +1,8 @@
 import pygame as pg
 
 from .. import prepare
+
+from . import colors
 from . import settings
 
 
@@ -34,8 +36,8 @@ class Button(pg.sprite.Sprite):
         Button changes its image depending if the player is hovering it or not.
         """
         idle_color = pg.Color('black')
-        hover_color = prepare.BUTTON_HOVER_TEXT_COLOR
-        hover_fill = prepare.BUTTON_HOVER_FILL_COLOR
+        hover_color = colors.BUTTON_HOVER_TEXT_COLOR
+        hover_fill = colors.BUTTON_HOVER_FILL_COLOR
 
         if width and height:
             idle_image = prepare.transparent_surface(width, height)
@@ -55,7 +57,7 @@ class Button(pg.sprite.Sprite):
     def click(self):
         if self.hover:
             if hasattr(self, 'name') and self.name is not None:
-                if settings.music_on:
+                if settings.sound_on:
                     prepare.SFX['click'].play()
                 self.call(self.name)
             else:

@@ -2,6 +2,8 @@ import pygame as pg
 import random
 
 from .. import prepare, tools
+
+from ..components import colors
 from ..components.animation import Animation
 from ..components.calc import Calc
 
@@ -76,7 +78,7 @@ class Transition(tools._State):
         pass
 
     def draw(self, surface):
-        surface.fill(prepare.BG_COLOR)
+        surface.fill(colors.BG_COLOR)
         surface.blit(self.previous_image, self.previous_rect)
         surface.blit(self.next_image, self.next_rect)
 

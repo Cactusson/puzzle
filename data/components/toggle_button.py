@@ -1,6 +1,8 @@
 import pygame as pg
 
 from .. import prepare
+
+from . import colors
 from .label import Label
 
 
@@ -27,7 +29,7 @@ class ToggleButton(pg.sprite.Sprite):
         label.draw(image_on)
         rect = (0, 0, label.rect.width + 2 * (width + gap),
                 label.rect.height + 2 * (width + gap))
-        pg.draw.rect(image_on, prepare.BUTTON_HOVER_FILL_COLOR, rect, width)
+        pg.draw.rect(image_on, colors.BUTTON_HOVER_FILL_COLOR, rect, width)
 
         image_off = prepare.transparent_surface(
             label.rect.width + 2 * (width + gap),

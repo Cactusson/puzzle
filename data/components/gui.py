@@ -9,10 +9,7 @@ class GUI:
     def __init__(self, best_time, difficulty, hardcore, finish_callback):
         self.animations = pg.sprite.Group()
         if best_time is not None:
-            self.best_time_label = pg.sprite.Sprite()
-            self.best_time_label.image = self.create_best_time_label(best_time)
-            self.best_time_label.rect = self.best_time_label.image.get_rect(
-                topleft=(850, 65))
+            self.create_best_time_label(best_time)
         else:
             self.best_time_label = None
 
@@ -32,6 +29,8 @@ class GUI:
         self.finish_button.name = None
 
     def create_best_time_label(self, best_time):
+        self.best_time_label = pg.sprite.Sprite()
+
         image = pg.Surface((140, 30)).convert()
         image.set_alpha(0)
         image = image.convert_alpha()
@@ -43,7 +42,9 @@ class GUI:
             font_name='OpenSans-Regular', topleft=(85, 0))
         first_label.draw(image)
         second_label.draw(image)
-        return image
+
+        self.best_time_label.image = image
+        self.best_time_label.rect = image.get_rect(topleft=(850, 70))
 
     def create_difficulty_label(self, difficulty):
         text = ['EASY', 'NORMAL', 'HARD'][difficulty]

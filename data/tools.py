@@ -39,6 +39,8 @@ class Control(object):
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
         self.state.startup({})
+        self.state.persist['difficulty'] = 1
+        self.state.persist['hardcore'] = 0
 
     def update(self, dt):
         """
@@ -91,8 +93,8 @@ class Control(object):
                         self.done = True
                 elif event.key == pg.K_f:
                     self.toggle_fullscreen()
-                elif event.key == pg.K_m:
-                    self.toggle_music()
+                # elif event.key == pg.K_m:
+                #     self.toggle_music()
             self.state.get_event(event)
 
     def main(self):
@@ -204,6 +206,8 @@ def load_all_fonts(directory, accept=(".ttf", '.otf')):
 
 
 def time_to_text(time):
+    if time == 0:
+        return '---'
     minutes = str(time // 60)
     if len(minutes) == 1:
         minutes = '0' + minutes

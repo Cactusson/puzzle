@@ -5,9 +5,9 @@ from .piece import Piece
 
 
 class PieceHardcore(Piece, HardcoreObj):
-    def __init__(self, index, image, image2, center, turn_time):
+    def __init__(self, index, image, image2, center, flip_time):
         Piece.__init__(self, index, image, center)
-        HardcoreObj.__init__(self, turn_time)
+        HardcoreObj.__init__(self, flip_time)
         self.image2 = image2
         self.show_image = random.choice([image, image2])
 

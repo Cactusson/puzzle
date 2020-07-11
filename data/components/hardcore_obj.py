@@ -19,10 +19,11 @@ class HardcoreObj:
         self.turn_time_min = turn_time[0]
         self.turn_time_max = turn_time[1]
         self.speed = 0.4
-        self.prepare_turn()
+        self.prepare_to_flip()
         self.prepare_to_move()
+        self.relaxed = False  # if True, it won't move by itself
 
-    def do_turn(self):
+    def flip(self):
         if not hasattr(self, 'pieces'):
             if self.show_image == self.image:
                 self.show_image = self.image2
@@ -34,10 +35,10 @@ class HardcoreObj:
                     piece.show_image = piece.image2
                 else:
                     piece.show_image = piece.image
-        self.prepare_turn()
+        self.prepare_to_flip()
 
-    def prepare_turn(self):
-        self.turn_task = Task(self.do_turn, random.randint(
+    def prepare_to_flip(self):
+        self.turn_task = Task(self.flip, random.randint(
             self.turn_time_min, self.turn_time_max))
 
     def auto_turn(self, num):
@@ -117,8 +118,9 @@ class HardcoreObj:
         self.animations.empty()
 
     def unclick(self):
-        self.prepare_turn()
-        self.prepare_to_move()
+        self.prepare_to_flip()
+        if not self.relaxed:
+            self.prepare_to_move()
 
     def update(self, dt):
         if self.turn_task:
